@@ -1,0 +1,12 @@
+name: Mirror
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch
+        run: git fetch https://github.com/ros-industrial/industrial_ci.git -n master:master legacy:legacy
