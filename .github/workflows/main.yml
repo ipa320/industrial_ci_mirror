@@ -10,3 +10,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Fetch
         run: git fetch https://github.com/ros-industrial/industrial_ci.git -n master:master legacy:legacy
+      - name: Push
+        run: git push origin master legacy
