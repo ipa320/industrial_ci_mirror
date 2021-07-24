@@ -338,6 +338,7 @@ function ici_get_log_cmd {
 }
 
 function ici_quiet {
+    local cmd; cmd=$(ici_get_log_cmd "$@")
     local out; out=$(mktemp)
     # shellcheck disable=SC2216
     # shellcheck disable=SC2260
@@ -345,9 +346,10 @@ function ici_quiet {
     local err=${PIPESTATUS[0]}
     if [ "$err" -ne 0 ]; then
         ici_redirect cat "$out"
+        rm -rf "$out"
+        ici_error "'$cmd' returned with $err" "$err"
     fi
     rm -rf "$out"
-    return "$err"
 }
 
 function ici_cmd {
@@ -367,17 +369,7 @@ function ici_cmd_quiet {
     local cmd; cmd=$(ici_get_log_cmd "$@")
     ici_log
     ici_color_output ${ANSI_BOLD} "$ $cmd* &> /dev/null"
-    local out; out=$(mktemp)
-    # shellcheck disable=SC2216
-    # shellcheck disable=SC2260
-    "$@" &> "$out" | true # '|| err=$?' disables errexit
-    local err=${PIPESTATUS[0]}
-    if [ "$err" -ne 0 ]; then
-        ici_redirect cat "$out"
-        rm -rf "$out"
-        ici_error "'$cmd' returned with $err" "$err"
-    fi
-    rm -rf "$out"
+    ici_quiet "$@"
 }
 
 function ici_cmd_filtered {
