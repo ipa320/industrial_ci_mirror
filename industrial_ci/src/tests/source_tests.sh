@@ -145,7 +145,7 @@ function run_pylint_check {
     mapfile -t files < <(ici_find_nonhidden "$target_ws/src" "${find_pattern[@]}")
 
     if [ "${#files[@]}" -ne 0 ]; then
-        ici_run "install_pylint" ici_quiet ici_install_pkgs_for_command "pylint" "pylint"
+        ici_run "install_pylint" ici_install_pkgs_for_command "pylint" "pylint"
         ici_run "run_pylint" ici_exec_in_workspace "$(ici_extend_space "$target_ws")" "$target_ws" "pylint" "${args[@]}" "${files[@]}"
     else
         ici_warn "No python files found, skipping pylint"
@@ -167,7 +167,7 @@ function run_source_tests {
     fi
 
     ici_source_builder
-    ici_run "${BUILDER}_setup" ici_quiet builder_setup
+    ici_run "${BUILDER}_setup" builder_setup
 
     ici_run "setup_rosdep" ici_setup_rosdep
 

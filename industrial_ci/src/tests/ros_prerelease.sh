@@ -21,8 +21,8 @@
 # (As of version 0.4.4 most of them are defined in env.sh).
 
 function setup_ros_buildfarm() {
-    ici_quiet ici_install_pkgs_for_command pip3 python3-pip python3-setuptools python3-wheel
-    ici_asroot pip3 install git+https://github.com/ros-infrastructure/ros_buildfarm.git
+    ici_install_pkgs_for_command pip3 python3-pip python3-setuptools python3-wheel
+    ici_cmd_quiet ici_asroot pip3 install git+https://github.com/ros-infrastructure/ros_buildfarm.git
 }
 
 function setup_ros_prerelease() {
@@ -100,7 +100,7 @@ function prepare_ros_prerelease() {
 
 function run_ros_prerelease() {
     ici_source_builder
-    ici_run "${BUILDER}_setup" ici_quiet builder_setup
+    ici_run "${BUILDER}_setup" builder_setup
 
     ici_run "setup_ros_prerelease" setup_ros_prerelease
 

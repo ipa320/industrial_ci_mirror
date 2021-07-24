@@ -53,11 +53,11 @@ function ici_parse_repository_url {
 }
 
 function ici_apt_install {
-    ici_asroot apt-get -qq install -y --no-upgrade --no-install-recommends "$@"
+    ici_cmd_filtered "Setting up" ici_asroot apt-get -qq install -y --no-upgrade --no-install-recommends "$@"
 }
 
 function ici_pip_install {
-    ici_asroot "${PYTHON_VERSION_NAME}" -m pip install -q "$@"
+    ici_cmd ici_asroot "${PYTHON_VERSION_NAME}" -m pip install -q "$@"
 }
 
 function ici_process_url {
@@ -307,7 +307,7 @@ function ici_setup_rosdep {
     ici_install_pkgs_for_command "pip${ROS_PYTHON_VERSION}" "${PYTHON_VERSION_NAME}-pip"
 
     if [ "$ROS_DISTRO" = "indigo" ] || [ "$ROS_DISTRO" = "jade" ]; then
-        ici_quiet ici_apt_install "ros-$ROS_DISTRO-roslib"
+        ici_apt_install "ros-$ROS_DISTRO-roslib"
     else
         ici_apt_install "ros-$ROS_DISTRO-ros-environment"
     fi
@@ -354,15 +354,7 @@ function ici_install_dependencies {
       rosdep_opts+=(--skip-keys "$skip_keys")
     fi
 
-    local out; out=$(mktemp)
-    ROS_PACKAGE_PATH="$cmake_prefix_path${ROS_PACKAGE_PATH:-}" ici_exec_in_workspace "$extend" "." rosdep install "${rosdep_opts[@]}" |& tee "$out" | grep "executing command" | cat
-    local err=${PIPESTATUS[0]}
-    if [ "$err" -ne 0 ]; then
-        cat "$out"
-    fi
-    rm -rf "$out"
-    return "$err"
-
+    ROS_PACKAGE_PATH="$cmake_prefix_path${ROS_PACKAGE_PATH:-}" ici_cmd_filtered "(executing command)|(Setting up)" ici_exec_in_workspace "$extend" "." rosdep install "${rosdep_opts[@]}"
 }
 
 function ici_build_workspace {

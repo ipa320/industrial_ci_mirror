@@ -122,7 +122,7 @@ function abi_report() {
   local reports_dir=$1; shift
 
   abi_install_compliance_checker
-  ici_quiet ici_install_pkgs_for_command links links
+  ici_install_pkgs_for_command links links
 
   mkdir -p "$reports_dir"
 
@@ -179,7 +179,7 @@ function run_abi_check() {
     ici_with_ws "$base_ws" ici_run "abi_get_base" ici_prepare_sourcespace "$base_ws/src" "$ABICHECK_URL"
 
     ici_source_builder
-    ici_run "${BUILDER}_setup" ici_quiet builder_setup
+    ici_run "${BUILDER}_setup" builder_setup
     ici_run "setup_rosdep" ici_setup_rosdep
 
     if [ -n "$CCACHE_DIR" ]; then
