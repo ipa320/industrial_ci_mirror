@@ -69,12 +69,11 @@ function ici_process_url {
 }
 
 function ici_gpg {
-    local homedir
-    ici_make_temp_dir homedir
     local keyring=$1
     shift
     ici_asroot touch "$keyring"
-    ici_asroot gpg --homedir "$homedir" --no-auto-check-trustdb --trust-model always --no-options --no-default-keyring --secret-keyring /dev/null --keyring "$keyring" "$@"
+    ici_asroot mkdir -m 700 /root/.gnupg
+    ici_cmd ici_asroot gpg --no-auto-check-trustdb --trust-model always --no-options --no-default-keyring --secret-keyring /dev/null --keyring "$keyring" "$@"
 }
 
 function ici_setup_gpg_key {
