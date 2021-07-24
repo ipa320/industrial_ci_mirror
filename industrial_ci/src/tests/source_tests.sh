@@ -146,7 +146,7 @@ function run_pylint_check {
 
     if [ "${#files[@]}" -ne 0 ]; then
         ici_run "install_pylint" ici_install_pkgs_for_command "pylint" "pylint"
-        ici_run "run_pylint" ici_exec_in_workspace "$(ici_extend_space "$target_ws")" "$target_ws" "pylint" "${args[@]}" "${files[@]}"
+        ici_run "run_pylint" ici_cmd ici_exec_in_workspace "$(ici_extend_space "$target_ws")" "$target_ws" "pylint" "${args[@]}" "${files[@]}"
     else
         ici_warn "No python files found, skipping pylint"
     fi

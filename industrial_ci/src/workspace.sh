@@ -112,7 +112,7 @@ function ici_init_apt {
 
     if apt-key adv -k C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 2>/dev/null | grep -q expired; then
         ici_warn "Expired ROS repository key found, installing new one"
-        ici_retry 3 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+        ici_retry 3 ici_cmd apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
     fi
 
     ici_asroot apt-get update -qq
@@ -134,7 +134,7 @@ function ici_init_apt {
         ici_setup_gpg_key
 
         ici_asroot tee "/etc/apt/sources.list.d/ros${ROS_VERSION}-latest.list" <<< "deb [${deb_opts[*]}] ${ROS_REPOSITORY_PATH} $(lsb_release -sc) main" > /dev/null
-        ici_asroot apt-get update -qq
+        ici_cmd ici_asroot apt-get update -qq
     fi
 
     # If more DEBs needed during preparation, define ADDITIONAL_DEBS variable where you list the name of DEB(S, delimitted by whitespace)
@@ -313,9 +313,9 @@ function ici_setup_rosdep {
     fi
 
     # Setup rosdep
-    rosdep --version
+    ici_cmd rosdep --version
     if ! [ -d /etc/ros/rosdep/sources.list.d ]; then
-        ici_asroot rosdep init
+        ici_cmd ici_asroot rosdep init
     fi
 
     update_opts=()
@@ -326,7 +326,7 @@ function ici_setup_rosdep {
         update_opts+=(--include-eol-distros)
     fi
 
-    ici_retry 2 rosdep update "${update_opts[@]}"
+    ici_retry 2 ici_cmd rosdep update "${update_opts[@]}"
 }
 
 function ici_extend_space {
